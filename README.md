@@ -1,4 +1,4 @@
-# Prodject pwSwaggerPetstore
+# Project pwSwaggerPetstore
 
 ## Instalation
 
@@ -16,6 +16,7 @@ git branch -M main
 git remote add origin << Your repository >>
 git push -u origin main
 ```
+* добавляем файл ```.gitignore```
 
 ### Устанавливаем Playwright
 
