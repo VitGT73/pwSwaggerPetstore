@@ -196,4 +196,76 @@ test.describe("users/ POST requests", async () => {
     });
  ```
 
- fgdfgdf
+### Добавление Custom Expects
+
+Custom Expects реализованы в отдельных модулях и собраны все вместе в одной фикстуре:
+
+
+```ts
+// lib/fixtures/fixtures.ts
+
+import { mergeExpects } from "@playwright/test";
+import { expect as toBeOneOfValuesExpect } from "@fixtures/toBeOneOfValues";
+import { expect as toBeValidDate } from "@fixtures/toBeValidDate";
+import { expect as typesExpects } from "@fixtures/typesExpects";
+
+export { test } from "@playwright/test";
+
+export const expect = mergeExpects(toBeOneOfValuesExpect, toBeValidDate, typesExpects);
+```
+
+* Использование Custom Expects
+
+```ts
+// tests/test.spec.ts
+
+import { test, expect } from "from "@fixtures/fixtures"; // Import the custom matchers definition
+
+test.describe("Custom Assertions", async () => {
+  test("with fixtures", async ({ request }) => {
+    const response = await request.post(`auth/login`, {});
+
+    expect(response.status()).toBe(400);
+
+    const body = await response.json();
+    expect(body.timestamp).toBeValidDate();
+
+    const dateStr = "2021-01-01";
+    expect(dateStr).toBeValidDate();
+
+    const number = 123;
+    expect(number).toBeNumber();
+
+    const boolean = true;
+    expect(boolean).toBeBoolean();
+
+    const string = "string";
+    expect(string).toBeString();
+
+    expect(body.status).toBeOneOfValues([400, 401, 403]);
+    expect(body.status).toBeOneOfTypes(["number", "null"]);
+  });
+});
+```
+
+* чтобы VS Code не ругался на новые методы, необходимо в корень проекта добавить следующий файл:
+
+```ts
+// global.d.ts
+
+export {};
+
+declare global {
+  namespace PlaywrightTest {
+    interface Matchers<R> {
+      toBeOneOfValues(array: any[]): R;
+      toBeValidDate(): R;
+      toBeOneOfTypes(array: string[]);
+      toBeString(): R;
+      toBeNumber(): R;
+      toBeBoolean(): R;
+      toBeObject(): R;
+    }
+  }
+}
+```
