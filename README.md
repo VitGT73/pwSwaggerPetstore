@@ -139,9 +139,59 @@ npx husky-init && npm install
 ```
 
 Настройки в файле ```.husky/pre-commit```, в него необходимо добавить строку ```npm run lint && npm run prettier```
+Не забываем в ```package.json``` добавить секцию/строки
+```js
+....
+  "scripts": {
+    "ui": "npx playwright test --ui",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "prettier": "prettier . --check",
+    "prettier:fix": "prettier . --write",
+    "prepare": "husky install"
+  },
+....
+```
+
 
 Если все таки нужно срочно закоммитить не зависимо от наличия ошибок:
 ```git commit -m "forcing the commit" --no-verify```
 
 
+При желании можно добавить нстройки в VS Code
+```json
+// .vscode/settings.json
+{
+  "eslint.validate": ["javascript", "typescript"],
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+}
+```
+
+
 ## Написание кода (основные моменты)
+
+
+### Использование переменных let в ``` describe() ``` блоках
+ Из-за того, как работает область видимости Javascript, нельзя создать переменную внутри  ```beforeEach()``` и использовать ее внутри тестов. Поэтому каждый раз, когда нужна переменная, которую необходимо установить в блоке ```beforeEach()```, а затем использовать ее в своем тесте позже, необходимо создать пустую переменную **let** на самом высоком уровне внутри ```describe()``` блока:
+
+ ```js
+test.describe("users/ POST requests", async () => {
+  let requestBody;  // объявляем
+  let roomId;       // объявляем
+
+  test.beforeEach(async () => {
+    const room = await createUser();
+    userId = room.userid;                 // инициализируем
+
+    requestBody = await createRandomBookingBody(roomId, login, password); // инициализируем
+  });
+
+  test("POST new booking with full body", async ({ request }) => {
+    const response = await request.post("booking/", {
+      data: requestBody,                                                 // используем тестах
+    });
+ ```
