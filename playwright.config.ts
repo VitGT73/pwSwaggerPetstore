@@ -1,4 +1,4 @@
-import { defineConfig} from '@playwright/test';
+import { defineConfig } from '@playwright/test';
 import { config } from "dotenv";
 import Env from "@helpers/env";
 
@@ -22,7 +22,7 @@ export default defineConfig({
   workers: 16,
   testDir: "tests",
   projects: [
-      {
+    {
       name: "api-checks",
     },
 
