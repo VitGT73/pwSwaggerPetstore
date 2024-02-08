@@ -5,14 +5,14 @@ import { Swaggers } from "@helpers/swaggers";
 import { Endpoints } from "@helpers/endpoints";
 // import fs from "fs";
 
-function getSwaggerDirName(endpoint: string) {
-  const dirName = Swaggers[endpoint].dirName;
+function getSwaggerDirName(tag: string) {
+  const dirName = Swaggers[tag].dirName;
   return dirName;
 }
 
-function getSwaggerFileName(endpoint: string) {
-  const dirName = getSwaggerDirName(endpoint);
-  const swaggerFileName = `${dirName}/${Swaggers[endpoint].fileName}`;
+function getSwaggerFileName(tag: string) {
+  const dirName = getSwaggerDirName(tag);
+  const swaggerFileName = `${dirName}/${Swaggers[tag].fileName}`;
   return swaggerFileName;
 }
 
@@ -21,13 +21,13 @@ function getSwaggerFileName(endpoint: string) {
 //   return endpointURL;
 // }
 
-export async function saveSwaggerToFile(endpoint: string) {
-  const jsonURL = Swaggers[endpoint].url;
+export async function saveSwaggerToFile(tag: string) {
+  const jsonURL = Swaggers[tag].url;
   try {
-    await fs.mkdir(getSwaggerDirName(endpoint), { recursive: true });
+    await fs.mkdir(getSwaggerDirName(tag), { recursive: true });
     const swagger = await getSwaggerFromURL(jsonURL);
     const swaggerString = JSON.stringify(swagger, null, 2);
-    const swaggerFileName = getSwaggerFileName(endpoint);
+    const swaggerFileName = getSwaggerFileName(tag);
 
     await writeDataToFile(swaggerFileName, swaggerString);
 
@@ -37,7 +37,8 @@ export async function saveSwaggerToFile(endpoint: string) {
   }
 }
 
-export async function getSwaggerFromURL(jsonURL: string) {
+export async function getSwaggerFromURL(tag: string) {
+  const jsonURL = Swaggers[tag].url;
   try {
     const swagger = await SwaggerParser.dereference(jsonURL);
     return swagger;
@@ -46,8 +47,8 @@ export async function getSwaggerFromURL(jsonURL: string) {
   }
 }
 
-export async function getSwaggerFromFile(endpoint: string) {
-  const swaggerFileName = getSwaggerFileName(endpoint);
+export async function getSwaggerFromFile(tag: string) {
+  const swaggerFileName = getSwaggerFileName(tag);
   try {
     const swagger = await SwaggerParser.dereference(swaggerFileName);
     return swagger;
@@ -66,9 +67,9 @@ export async function getSchemaFromSwagger(operationId: string, responseCode: st
   return schemaData;
 }
 
-export async function saveSchemasToFile(endpoint: string) {
-  const dirName = getSwaggerDirName(endpoint);
-  const swaggerFileName = getSwaggerFileName(endpoint);
+export async function saveSchemasToFile(tag: string) {
+  const dirName = getSwaggerDirName(tag);
+  const swaggerFileName = getSwaggerFileName(tag);
 
   try {
     // Загрузка и дереференциация Swagger-спецификации
@@ -114,9 +115,9 @@ export async function saveSchemasToFile(endpoint: string) {
   }
 }
 
-export async function saveAllVarianOfResponses(endpoint: string) {
-  const dirName = getSwaggerDirName(endpoint); // Укажите имя вашей директории
-  const swagger = await getSwaggerFromURL(Swaggers[endpoint].url);
+export async function saveAllVarianOfResponses(tag: string) {
+  const dirName = getSwaggerDirName(tag); // Укажите имя вашей директории
+  const swagger = await getSwaggerFromURL(Swaggers[tag].url);
   const Endpoints: Record<string, Record<string, any>> = {};
 
   try {
