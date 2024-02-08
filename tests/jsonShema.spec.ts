@@ -1,34 +1,29 @@
-// import { Endpoints, EndpointKeys } from "@helpers/endpoints";
+import { test } from "@playwright/test";
+// import { Endpoints } from "@helpers/endpoints";
 import {
   saveSwaggerToFile,
-  // getSwaggerFromFile,
-  // saveSchemasToFile,
+  saveSchemasToFile,
   saveAllVarianOfResponses,
+  getSchemaFromSwagger,
 } from "@helpers/swaggerParser";
 // import { Swaggers } from "@helpers/swaggers";
-import { test } from "@playwright/test";
 
 test.describe("Swagger helper functions @swagger", async () => {
-  test.only(`Save JSON Swagger to local file`, async () => {
+  test(`Save JSON Swagger to local file`, async () => {
     await saveSwaggerToFile("all");
   });
 
-  test.only(`Save short Endpoint's info to file`, async () => {
+  test(`Save short Endpoint's info to file`, async () => {
     // await saveSchemasToFile(endpoint);
     await saveAllVarianOfResponses("all");
   });
 
-  // test("Get schemas /auth from file", async () => {
-  //   const schema = await getSwaggerFromFile(EndpointKeys["auth"]);
+  test.only("Get schema for GET_getInventory - 200 from swagger", async () => {
+    const schemaData = await getSchemaFromSwagger("GET_getInventory", "200");
+    console.log("GET_getInventory - 200", schemaData);
+  });
 
-  //   console.log("/login", schema.paths["/login"]["post"]["responses"][200]["content"]["*/*"].schema);
-  //   console.log("/validate", schema.paths["/validate"]["post"]["responses"][200]["content"]["*/*"].schema);
-  //   console.log("/logout", schema.paths["/logout"]["post"]["responses"][200]["content"]["*/*"].schema);
-  // });
-
-  // test.only("Save all schemas for endpoint to files", async () => {
-  //   for (const endpoint of EndpointKeys) {
-  //     await saveSchemasToFile(endpoint);
-  //   }
-  // });
+  test("Save all schemas for endpoint to files", async () => {
+    await saveSchemasToFile("all");
+  });
 });

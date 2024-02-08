@@ -2,6 +2,7 @@
 import SwaggerParser from "@apidevtools/swagger-parser";
 import * as fs from "fs/promises";
 import { Swaggers } from "@helpers/swaggers";
+import { Endpoints } from "@helpers/endpoints";
 // import fs from "fs";
 
 function getSwaggerDirName(endpoint: string) {
@@ -55,17 +56,19 @@ export async function getSwaggerFromFile(endpoint: string) {
   }
 }
 
-export async function getSchemaFromSwagger(endpoint: string, path: string, method: string, responseCode: string) {
-  const swagger = await getSwaggerFromFile(endpoint);
-  console.log(swagger);
-  const schema = swagger.paths[path][method]["responses"][responseCode]["content"]["*/*"].schema;
-  console.log(`схема для ${endpoint}, ${path}, ${method}, ${responseCode}`, schema);
-  return schema;
+export async function getSchemaFromSwagger(operationId: string, responseCode: string) {
+  const tag = Endpoints[operationId].tags[0];
+  const path = Endpoints[operationId].path;
+  const method = Endpoints[operationId].method;
+  const swagger = await getSwaggerFromFile(tag);
+  const schemaData = swagger.paths[path][method]["responses"][responseCode]["schema"];
+  // console.log(`схема для ${operationId} - ${responseCode}:`, schemaData);
+  return schemaData;
 }
 
 export async function saveSchemasToFile(endpoint: string) {
-  const swaggerFileName = getSwaggerFileName(endpoint);
   const dirName = getSwaggerDirName(endpoint);
+  const swaggerFileName = getSwaggerFileName(endpoint);
 
   try {
     // Загрузка и дереференциация Swagger-спецификации
@@ -86,16 +89,21 @@ export async function saveSchemasToFile(endpoint: string) {
             const response = methodObject.responses[responseCode];
 
             // Проверка наличия схемы (schema) внутри кода ответа
-            if (response.content && response.content["*/*"] && response.content["*/*"].schema) {
-              const schemaFileName = `${path}_${method}_${responseCode}_schema.json`.replace("/", "_");
+            if (response.schema) {
+              const tags = methodObject.tags;
+              const operationId = methodObject.operationId || "unknown";
+              const schemaFileName = `${tags[0]}.${method}.${operationId}.${responseCode}.schema.json`.replace(
+                /\//g,
+                "_"
+              );
               const schemaFullFileName = `${dirName}/${schemaFileName}`;
 
               // Создание каталога "output", если он не существует
               await createDir(dirName);
 
-              const schemaString = JSON.stringify(response.content["*/*"].schema, null, 2);
+              const schemaString = JSON.stringify(response.schema, null, 2);
               await writeDataToFile(schemaFullFileName, schemaString);
-              console.log(`Схема сохранена в файле: ${dirName}`);
+              console.log(`Схема сохранена в файле: ${schemaFullFileName}`);
             }
           }
         }
@@ -108,7 +116,7 @@ export async function saveSchemasToFile(endpoint: string) {
 
 export async function saveAllVarianOfResponses(endpoint: string) {
   const dirName = getSwaggerDirName(endpoint); // Укажите имя вашей директории
-  const swagger = await getSwaggerFromURL(Swaggers[endpoint].url); // !!! Сделать универсальным !!!!
+  const swagger = await getSwaggerFromURL(Swaggers[endpoint].url);
   const Endpoints: Record<string, Record<string, any>> = {};
 
   try {
@@ -120,11 +128,13 @@ export async function saveAllVarianOfResponses(endpoint: string) {
 
         if (methodObject.operationId) {
           const operationId = methodObject.operationId.replace(/(^\w+)(_)/, ""); // Удаление начальной части из operationId
-          const operationKey = `${method}_${operationId}`;
+          const operationKey = `${method.toUpperCase()}_${operationId}`;
+          const tags = methodObject.tags;
           Endpoints[operationKey] = {
             path: path,
-            method: method.toUpperCase(),
+            method: method,
             codeResponses: [],
+            tags: tags,
           };
 
           if (methodObject.responses) {

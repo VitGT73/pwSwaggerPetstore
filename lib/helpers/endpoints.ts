@@ -1,103 +1,123 @@
 export const Endpoints = {
-  post_uploadFile: {
+  POST_uploadFile: {
     path: "/pet/{petId}/uploadImage",
-    method: "POST",
+    method: "post",
     codeResponses: [200],
+    tags: ["pet"],
   },
-  post_addPet: {
+  POST_addPet: {
     path: "/pet",
-    method: "POST",
+    method: "post",
     codeResponses: [405],
+    tags: ["pet"],
   },
-  put_updatePet: {
+  PUT_updatePet: {
     path: "/pet",
-    method: "PUT",
+    method: "put",
     codeResponses: [400, 404, 405],
+    tags: ["pet"],
   },
-  get_findPetsByStatus: {
+  GET_findPetsByStatus: {
     path: "/pet/findByStatus",
-    method: "GET",
+    method: "get",
     codeResponses: [200, 400],
+    tags: ["pet"],
   },
-  get_findPetsByTags: {
+  GET_findPetsByTags: {
     path: "/pet/findByTags",
-    method: "GET",
+    method: "get",
     codeResponses: [200, 400],
+    tags: ["pet"],
   },
-  get_getPetById: {
+  GET_getPetById: {
     path: "/pet/{petId}",
-    method: "GET",
+    method: "get",
     codeResponses: [200, 400, 404],
+    tags: ["pet"],
   },
-  post_updatePetWithForm: {
+  POST_updatePetWithForm: {
     path: "/pet/{petId}",
-    method: "POST",
+    method: "post",
     codeResponses: [405],
+    tags: ["pet"],
   },
-  delete_deletePet: {
+  DELETE_deletePet: {
     path: "/pet/{petId}",
-    method: "DELETE",
+    method: "delete",
     codeResponses: [400, 404],
+    tags: ["pet"],
   },
-  post_placeOrder: {
+  POST_placeOrder: {
     path: "/store/order",
-    method: "POST",
+    method: "post",
     codeResponses: [200, 400],
+    tags: ["store"],
   },
-  get_getOrderById: {
+  GET_getOrderById: {
     path: "/store/order/{orderId}",
-    method: "GET",
+    method: "get",
     codeResponses: [200, 400, 404],
+    tags: ["store"],
   },
-  delete_deleteOrder: {
+  DELETE_deleteOrder: {
     path: "/store/order/{orderId}",
-    method: "DELETE",
+    method: "delete",
     codeResponses: [400, 404],
+    tags: ["store"],
   },
-  get_getInventory: {
+  GET_getInventory: {
     path: "/store/inventory",
-    method: "GET",
+    method: "get",
     codeResponses: [200],
+    tags: ["store"],
   },
-  post_createUsersWithArrayInput: {
+  POST_createUsersWithArrayInput: {
     path: "/user/createWithArray",
-    method: "POST",
+    method: "post",
     codeResponses: [null],
+    tags: ["user"],
   },
-  post_createUsersWithListInput: {
+  POST_createUsersWithListInput: {
     path: "/user/createWithList",
-    method: "POST",
+    method: "post",
     codeResponses: [null],
+    tags: ["user"],
   },
-  get_getUserByName: {
+  GET_getUserByName: {
     path: "/user/{username}",
-    method: "GET",
+    method: "get",
     codeResponses: [200, 400, 404],
+    tags: ["user"],
   },
-  put_updateUser: {
+  PUT_updateUser: {
     path: "/user/{username}",
-    method: "PUT",
+    method: "put",
     codeResponses: [400, 404],
+    tags: ["user"],
   },
-  delete_deleteUser: {
+  DELETE_deleteUser: {
     path: "/user/{username}",
-    method: "DELETE",
+    method: "delete",
     codeResponses: [400, 404],
+    tags: ["user"],
   },
-  get_loginUser: {
+  GET_loginUser: {
     path: "/user/login",
-    method: "GET",
+    method: "get",
     codeResponses: [200, 400],
+    tags: ["user"],
   },
-  get_logoutUser: {
+  GET_logoutUser: {
     path: "/user/logout",
-    method: "GET",
+    method: "get",
     codeResponses: [null],
+    tags: ["user"],
   },
-  post_createUser: {
+  POST_createUser: {
     path: "/user",
-    method: "POST",
+    method: "post",
     codeResponses: [null],
+    tags: ["user"],
   },
 } as const;
 

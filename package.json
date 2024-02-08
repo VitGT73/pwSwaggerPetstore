@@ -8,6 +8,7 @@
   },
   "scripts": {
     "test": "npx playwright test --grep-invert=@swagger",
+    "test:debug": "npx playwright test --debug",
     "test:generate:schema": "GENERATE_SCHEMA_TRACKING_DATA=true npx playwright test --grep-invert=@swagger",
     "test:staging": "test_env=staging npx playwright test --grep-invert=@swagger",
     "test:local": "test_env=local npx playwright test --grep-invert=@swagger",
