@@ -1,5 +1,7 @@
 # Project pwSwaggerPetstore
 
+Лучший курс по автоматизации тестирования API - [The Definitive Guide to API Test Automation With Playwright](https://playwrightsolutions.com/is-it-possible-to-do-api-testing-with-playwright-the-definitive/)
+
 ## Instalation
 
 ### Создаем репозиторий на GitHub

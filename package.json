@@ -7,12 +7,12 @@
     "lib": "lib"
   },
   "scripts": {
-    "test": "npx playwright test --grep-invert=@unsatisfactory",
-    "test:generate:schema": "GENERATE_SCHEMA_TRACKING_DATA=true npx playwright test --grep-invert=@unsatisfactory",
-    "test:staging": "test_env=staging npx playwright test --grep-invert=@unsatisfactory",
-    "test:local": "test_env=local npx playwright test --grep-invert=@unsatisfactory",
-    "test:happy": "npx playwright test --grep @happy --grep-invert=@unsatisfactory",
-    "test:unsatisfactory": "npx playwright test --grep=@unsatisfactory",
+    "test": "npx playwright test --grep-invert=@swagger",
+    "test:generate:schema": "GENERATE_SCHEMA_TRACKING_DATA=true npx playwright test --grep-invert=@swagger",
+    "test:staging": "test_env=staging npx playwright test --grep-invert=@swagger",
+    "test:local": "test_env=local npx playwright test --grep-invert=@swagger",
+    "test:happy": "npx playwright test --grep @happy --grep-invert=@swagger",
+    "test:swagger": "npx playwright test --grep=@swagger",
     "ui": "npx playwright test --ui",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
