@@ -4,14 +4,13 @@ import * as fs from "fs/promises";
 import { Swaggers } from "@helpers/swaggers";
 // import fs from "fs";
 
-
 function getSwaggerDirName(endpoint: string) {
   const dirName = Swaggers[endpoint].dirName;
   return dirName;
 }
 
 function getSwaggerFileName(endpoint: string) {
-  const dirName = getSwaggerDirName(endpoint)
+  const dirName = getSwaggerDirName(endpoint);
   const swaggerFileName = `${dirName}/${Swaggers[endpoint].fileName}`;
   return swaggerFileName;
 }
@@ -68,7 +67,6 @@ export async function saveSchemasToFile(endpoint: string) {
   const swaggerFileName = getSwaggerFileName(endpoint);
   const dirName = getSwaggerDirName(endpoint);
 
-
   try {
     // Загрузка и дереференциация Swagger-спецификации
     const dereferencedSpec = await SwaggerParser.dereference(swaggerFileName);
@@ -108,10 +106,9 @@ export async function saveSchemasToFile(endpoint: string) {
   }
 }
 
-
 export async function saveAllVarianOfResponses(endpoint: string) {
   const dirName = getSwaggerDirName(endpoint); // Укажите имя вашей директории
-  const swagger = await getSwaggerFromURL(Swaggers[endpoint].url) // !!! Сделать универсальным !!!!
+  const swagger = await getSwaggerFromURL(Swaggers[endpoint].url); // !!! Сделать универсальным !!!!
   const Endpoints: Record<string, Record<string, any>> = {};
 
   try {
@@ -127,7 +124,7 @@ export async function saveAllVarianOfResponses(endpoint: string) {
           Endpoints[operationKey] = {
             path: path,
             method: method.toUpperCase(),
-            codeResponses: []
+            codeResponses: [],
           };
 
           if (methodObject.responses) {
@@ -146,7 +143,6 @@ export async function saveAllVarianOfResponses(endpoint: string) {
     console.error("Ошибка получения списка ответов из Swagger-спецификации:", error);
   }
 }
-
 
 export async function createDir(directoryName: string) {
   try {
